@@ -1,10 +1,17 @@
 # signals/signal_filter.py
 
+import logging
+
 def calculate_probability(signal_count, total_count):
     """
     Tính xác suất của tín hiệu dựa trên số lần tín hiệu thành công.
     """
-    return (signal_count / total_count) * 100
+    if total_count == 0:
+        logging.warning("Tổng số tín hiệu không thể bằng 0.")
+        return 0
+    probability = (signal_count / total_count) * 100
+    logging.info(f"Xác suất tín hiệu: {probability}%")
+    return probability
 
 def filter_signals(signals, min_probability=70):
     """
@@ -15,7 +22,10 @@ def filter_signals(signals, min_probability=70):
     for signal in signals:
         if signal['probability'] >= min_probability:
             filtered_signals.append(signal)
+        else:
+            logging.info(f"Tín hiệu bị loại bỏ: {signal['type']} với xác suất {signal['probability']}%")
     
+    logging.info(f"Đã lọc {len(filtered_signals)} tín hiệu từ tổng số {len(signals)} tín hiệu.")
     return filtered_signals
 
 def evaluate_signal(signal):
@@ -32,4 +42,5 @@ def evaluate_signal(signal):
     else:
         signal['probability'] = 50  # Mặc định cho tín hiệu không xác định
     
+    logging.info(f"Tín hiệu {signal['type']} có xác suất: {signal['probability']}%")
     return signal

@@ -1,4 +1,4 @@
-# structure/pullback_detector.py
+import logging
 
 def is_valid_pullback(price, last_swing_price, direction="up", threshold=0.5):
     """
@@ -14,9 +14,19 @@ def is_valid_pullback(price, last_swing_price, direction="up", threshold=0.5):
         bool: True nếu là pullback hợp lệ.
     """
     if direction == "up":
-        print(f"find the up....")
-        return price <= last_swing_price and abs(price - last_swing_price) >= threshold
+        # Kiểm tra pullback trong xu hướng tăng
+        if price <= last_swing_price and abs(price - last_swing_price) >= threshold * last_swing_price:
+            logging.info(f"Uptrend pullback detected: Price = {price}, Last Swing Price = {last_swing_price}")
+            return True
+        else:
+            logging.info(f"No uptrend pullback: Price = {price}, Last Swing Price = {last_swing_price}")
+    
     elif direction == "down":
-        print(f"find the down....")
-        return price >= last_swing_price and abs(price - last_swing_price) >= threshold
+        # Kiểm tra pullback trong xu hướng giảm
+        if price >= last_swing_price and abs(price - last_swing_price) >= threshold * last_swing_price:
+            logging.info(f"Downtrend pullback detected: Price = {price}, Last Swing Price = {last_swing_price}")
+            return True
+        else:
+            logging.info(f"No downtrend pullback: Price = {price}, Last Swing Price = {last_swing_price}")
+    
     return False
